@@ -9,6 +9,7 @@ import { routes } from '../../../App';
 const MainLayout: FC<mainLayoutType> = ({ children, style }) => {
   const [currentRoute, setCurrentRoute] = useState(routes[0].route);
   const route = useRoute();
+
   useEffect(() => {
     setCurrentRoute(route.name);
   }, [route]);
