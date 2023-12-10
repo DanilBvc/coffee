@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ToastManager, { Toast } from 'toastify-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TextField from '../../../components/generall/textField/textField';
 import BaseLayout from '../../../layout/baseLayout/baseLayout';
@@ -59,7 +58,7 @@ function Login () {
       }
       handleNavigate('Main');
     } catch (err) {
-      Toast.error(`${String(err).slice(0, 20)}...`);
+      console.log(`${String(err).slice(0, 20)}...`);
     }
   };
 
@@ -70,7 +69,6 @@ function Login () {
   return (
     <BaseLayout style={styles.layout}>
       <AuthHeader />
-      <ToastManager />
       <TextField
         value={mail}
         onChange={handleEmailChange}

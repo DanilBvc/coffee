@@ -1,5 +1,6 @@
-export const baseUrl = 'http://192.168.88.106:3000';
-
+export const baseUrl = 'https://coffee-backend.vercel.app';
+// http://192.168.88.106:3000
+// http://192.168.1.6:3000'
 // user
 export const baseUserUrl = `${baseUrl}/user`;
 
@@ -7,7 +8,7 @@ export const baseUserUrl = `${baseUrl}/user`;
 export const loginUrl = `${baseUrl}/auth/login`;
 export const registerUrl = `${baseUrl}/auth/register`;
 export const whoAmI = `${baseUserUrl}/me`;
-export const logoutUrl = `${baseUrl}/auth/logout`
+export const logoutUrl = `${baseUrl}/auth/logout`;
 
 // files
 export const saveAvatar = `${baseUrl}/files/upload/avatars`;
@@ -17,7 +18,7 @@ export const getAllProductsUrl = `${baseUrl}/product/all`;
 
 // user actions
 export const favoriteUrl = `${baseUserUrl}/favorite`;
-export const updateUserData = `${baseUserUrl}/update`
+export const updateUserData = `${baseUserUrl}/update`;
 
 // order actions
 export const order = baseUrl + '/order';

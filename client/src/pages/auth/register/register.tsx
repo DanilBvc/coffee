@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
-import { Toast } from 'toastify-react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthHeader from '../../../components/auth/authHeader/authHeader';
@@ -14,8 +13,6 @@ import useUserStore from '../../../modules/user/store';
 import Loader from '../../../components/generall/loader/loader';
 import Button from '../../../components/generall/button/button';
 import UsePicImage from '../../../hooks/usePicImage';
-import ToastModal from '../../../components/generall/toastModal/toastModal';
-import { ToastType } from '../../../components/generall/toastModal/toastModal.type';
 
 const defaultRegisterData = {
   mail: '',
@@ -28,7 +25,9 @@ function Register () {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(defaultRegisterData);
   const [loading, setLoading] = useState(false);
-  const { link, error, handleImageSelect, errorText, updateError } = UsePicImage({ endpoint: saveAvatar });
+  const { link, error, handleImageSelect, errorText, updateError } = UsePicImage({
+    endpoint: saveAvatar,
+  });
   const { userName, mail, password, avatar } = userData;
   const updateUserData = useUserStore((state) => state.updateUserData);
   // redirect
@@ -43,7 +42,7 @@ function Register () {
     setLoading(true);
     try {
       const response = await unauthorizedRequest(registerUrl, 'POST', userData);
-      await Toast.success('Success');
+
       updateUserData(response.userData);
       await AsyncStorage.setItem('accessToken', response.tokens.accessToken);
       clearForm();
@@ -72,18 +71,17 @@ function Register () {
     if (link) {
       setUserData((prev) => ({ ...prev, avatar: link }));
     }
-  }, [link])
+  }, [link]);
 
   useEffect(() => {
     if (error) {
-      updateError(true, String(error))
+      updateError(true, String(error));
     }
   }, [error]);
 
   return (
     <BaseLayout style={styles.layout}>
       <AuthHeader />
-      <ToastModal error={false} errorText={errorText} type={ToastType.error} />
       <TextField
         value={userName}
         onChange={handleUserNameChange}

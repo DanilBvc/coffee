@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import ToastManager, { Toast } from 'toastify-react-native';
 import MainLayout from '../../layout/mainLayout/mainLayout';
 import Avatar from '../../components/generall/avatar/avatar';
 import DropDown from '../../components/generall/dropDown/dropDown';
@@ -49,7 +48,7 @@ function Main () {
         productsStore.updateProductData(response);
       }
     } catch (err) {
-      Toast.error(`${String(err).slice(0, 20)}...`);
+      console.log(`${String(err).slice(0, 20)}...`);
     }
   };
 
@@ -59,7 +58,6 @@ function Main () {
 
   return (
     <MainLayout style={{ paddingBottom: 70 }}>
-      <ToastManager />
       <View style={styles.locationContainer}>
         <View style={styles.locationDropDownContainer}>
           <View>

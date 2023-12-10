@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, ImageBackground, Pressable } from 'react-native';
 import React, { useEffect } from 'react';
-import ToastManager, { Toast } from 'toastify-react-native';
 import { styles } from './home.style';
 import useUserStore from '../../modules/user/store';
 import { whoAmI } from '../../utils/network';
@@ -22,7 +21,7 @@ function Home () {
       handleNavigate('Main');
     } catch (err) {
       console.log(err);
-      Toast.error(`${String(err).slice(0, 20)}...`);
+      console.log(`${String(err).slice(0, 20)}...`);
     }
   };
 
@@ -36,7 +35,6 @@ function Home () {
 
   return (
     <ImageBackground source={img} style={styles.backgroundImage}>
-      <ToastManager />
       <View style={styles.container}>
         <Text style={styles.text}>Coffee so good, your taste buds will love it.</Text>
         <Text style={styles.blurText}>The best grain, the finest roast, the powerful flavor.</Text>

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import ToastManager, { Toast } from 'toastify-react-native';
 import DetailsLayout from '../../layout/detailsLayout/detailsLayout';
 import useProductStore, { type productItem } from '../../modules/products/store';
 import HeartButton from '../../components/generall/heartButton/heartButton';
@@ -20,7 +19,7 @@ function Detail () {
   const updateUserData = useUserStore((state) => state.updateUserData);
   const favorite = useUserStore((state) => state.favorite);
   const [product, setProduct] = useState<productItem | null>(null);
-  const [orderDate, setOrderDate] = useState('')
+  const [orderDate, setOrderDate] = useState('');
   const [size, setSize] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const route = useRoute();
@@ -45,7 +44,7 @@ function Detail () {
       updateUserData(updatedUser);
     } catch (err) {
       console.log(err);
-      Toast.error(`${String(err).slice(0, 20)}...`);
+      console.log(`${String(err).slice(0, 20)}...`);
     }
   };
 
@@ -55,7 +54,7 @@ function Detail () {
         return await authorizedRequest(createOrder, 'POST', 'accessToken', product);
       }
     } catch (err) {
-      Toast.error(`${String(err).slice(0, 20)}...`);
+      console.log(`${String(err).slice(0, 20)}...`);
     }
   };
 
@@ -74,17 +73,21 @@ function Detail () {
   };
   const send = async () => {
     const order = await sendOrder();
-    const date = getDateFrom(order.createdAt)
-    setOrderDate(date)
+    const date = getDateFrom(order.createdAt);
+    setOrderDate(date);
     showModal();
   };
 
   return (
     <>
-    <DetailsModal close={closeModal} open={modalIsOpen} closeRedirect={() => {
-      handleNavigate('Main');
-    }} date={orderDate}/>
-      <ToastManager />
+      <DetailsModal
+        close={closeModal}
+        open={modalIsOpen}
+        closeRedirect={() => {
+          handleNavigate('Main');
+        }}
+        date={orderDate}
+      />
       <DetailsLayout>
         {product
           ? (
