@@ -36,6 +36,7 @@ export const authorizedRequest = async (
       return await response.json();
     }
     const errorResponse = await response.json();
+    console.log(errorResponse)
     throw new Error(errorResponse.message || 'Request failed');
   } catch (err) {
     throw new Error(String(err));
@@ -61,7 +62,12 @@ export const unauthorizedRequest = async (url: string, method: string, body?: ob
   try {
     const response = await fetch(url, request);
     if (response.status === 200 || response.status === 201) {
-      return await response.json();
+      const text = await response.text();
+      if (text) {
+        return JSON.parse(text);
+      } else {
+        return null;
+      }
     }
     const errorResponse = await response.json();
     throw new Error(errorResponse.message || 'Request failed');

@@ -4,10 +4,15 @@ import RefreshToken from './entities/refresh.token.entity';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/schema/user.schema';
 import { sign, verify } from 'jsonwebtoken';
+import { Token } from './schema/token.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class AuthService {
-  private refreshTokens: RefreshToken[] = [];
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @InjectModel(Token.name) private readonly refreshTokens: Model<Token>,
+    private readonly userService: UserService,
+  ) {}
 
   async refresh(refreshStr: string): Promise<string | undefined> {
     const refreshToken = await this.retrieveRefreshToken(refreshStr);
@@ -24,17 +29,16 @@ export class AuthService {
     return sign(accessToken, process.env.ACCESS_SECRET, { expiresIn: '1h' });
   }
 
-  private retrieveRefreshToken(
+  private async retrieveRefreshToken(
     refreshStr: string,
-  ): Promise<RefreshToken | undefined> {
+  ): Promise<Token | undefined> {
     try {
       const decode = verify(refreshStr, process.env.REFRESH_SECRET);
       if (typeof decode === 'string') {
         return undefined;
       }
-      return Promise.resolve(
-        this.refreshTokens.find((item) => item.id === decode.id),
-      );
+      const token = await this.refreshTokens.findOne({ id: decode.id });
+      return Promise.resolve(token);
     } catch (err) {
       return undefined;
     }
@@ -46,7 +50,9 @@ export class AuthService {
     values: { userAgent: string; ipAddress: string },
   ) {
     const user = await this.userService.findByMail(mail);
-
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     const isValidPassword = await bcrypt.compare(
       password,
       user.toObject().passwordHash,
@@ -63,20 +69,30 @@ export class AuthService {
     delete userData.passwordHash;
     return userData;
   }
+
+  private async generateNextTokenId(): Promise<number> {
+    const lastToken = await this.refreshTokens
+      .findOne()
+      .sort({ id: -1 })
+      .select('id')
+      .exec();
+
+    return (lastToken ? lastToken.id : 0) + 1;
+  }
+
   private async newRefreshAndAccessToken(
     user: User,
     values: { userAgent: string; ipAddress: string },
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    // const modelLength = (await this.refreshTokens.find({})).length;
+    const nextTokenId = await this.generateNextTokenId();
     const refreshObject = new RefreshToken({
-      id: String(
-        this.refreshTokens.length === 0
-          ? 0
-          : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
-      ),
+      id: String(nextTokenId),
       ...values,
       userId: user._id,
     });
-    this.refreshTokens.push(refreshObject);
+    const newRefresh = new this.refreshTokens(refreshObject);
+    await newRefresh.save();
     return {
       refreshToken: refreshObject.sign(),
       accessToken: sign(
@@ -125,8 +141,12 @@ export class AuthService {
     if (!refreshToken) {
       return undefined;
     }
-    this.refreshTokens = this.refreshTokens.filter(
-      (refreshToken) => refreshToken.id !== refreshToken.id,
-    );
+    try {
+      await this.refreshTokens.findOneAndDelete({ id: refreshToken.id });
+    } catch (err) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+    }
+
+    return null;
   }
 }

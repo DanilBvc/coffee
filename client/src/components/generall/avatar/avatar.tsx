@@ -1,9 +1,9 @@
 import React, { type FC } from 'react';
-import { Image, Pressable } from 'react-native';
+import { Image, type ImageStyle, Pressable, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './avatar.style';
 
-const Avatar: FC<{ url: string }> = ({ url }) => {
+const Avatar: FC<{ url: string; style?: ImageStyle }> = ({ url, style }) => {
   const navigation = useNavigation();
   const handleNavigate = (route: string) => {
     navigation.navigate(route as never);
@@ -14,7 +14,7 @@ const Avatar: FC<{ url: string }> = ({ url }) => {
         handleNavigate('Profile');
       }}
     >
-      {url && <Image source={{ uri: url }} style={styles.container} alt="avatar" />}
+      {url && <Image source={{ uri: url }} style={[styles.container, style]} alt="avatar" />}
     </Pressable>
   );
 };

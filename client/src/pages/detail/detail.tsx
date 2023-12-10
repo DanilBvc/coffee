@@ -11,7 +11,7 @@ import CheckBox from '../../components/generall/checkBox/checkBox';
 import BottomSection from '../../components/generall/bottomSection/bottomSection';
 import { styles } from './detail.style';
 import { authorizedRequest } from '../../utils/queries';
-import { createOrder, updateFavoriteUrl } from '../../utils/network';
+import { createOrder, favoriteUrl } from '../../utils/network';
 import useUserStore from '../../modules/user/store';
 import Button from '../../components/generall/button/button';
 import DetailsModal from '../../components/details/detailsModal/detailsModal';
@@ -39,7 +39,7 @@ function Detail () {
   }, [productId]);
   const favoriteHandler = async () => {
     try {
-      const updatedUser = await authorizedRequest(updateFavoriteUrl, 'POST', 'accessToken', {
+      const updatedUser = await authorizedRequest(favoriteUrl, 'POST', 'accessToken', {
         id: productId,
       });
       updateUserData(updatedUser);

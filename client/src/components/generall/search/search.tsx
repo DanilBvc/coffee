@@ -78,7 +78,7 @@ const Search: FC<searchType> = ({
               onChange={handleChange}
             />
           </View>
-          <Pressable style={styles.filterIcon} onPress={openModal}>
+          <Pressable style={[styles.filterIcon]} onPress={openModal}>
             <FilterSvg />
           </Pressable>
         </View>

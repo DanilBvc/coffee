@@ -175,3 +175,18 @@ export function TransparentHeart ({ active = false }: { active: boolean }) {
     </Svg>
   );
 }
+
+export function PenSvg () {
+  return (
+    <Svg
+      width={24}
+      height={24}
+      viewBox="0 0 1200 1200"
+    >
+      <G>
+        <Path d="m788.33 263.33-345 343.34c-41.668 41.668-75 88.332-101.67 140v1.668l110 110c51.668-26.668 100-60 141.67-101.67l345-345z" />
+        <Path d="m265 901.67c-10 21.668 11.668 45 33.332 33.332l98.332-48.332-83.332-83.332z" />
+      </G>
+    </Svg>
+  );
+}

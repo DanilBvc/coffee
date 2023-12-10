@@ -30,7 +30,6 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File,
     @Param('folderName') folderName: string,
   ) {
-    console.log('new file');
     if (!file) {
       throw new Error('No file uploaded.');
     }

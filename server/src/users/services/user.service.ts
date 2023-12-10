@@ -4,12 +4,13 @@ import mongoose, { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
 import { createUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import { updateUserDto } from '../dtos/update-user.dto';
+import { ProductService } from 'src/products/services/product.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
-    private readonly jwtService: JwtService,
+    private readonly productService: ProductService,
   ) {}
   async findUser(@Param('id') id: string) {
     try {
@@ -40,7 +41,6 @@ export class UserService {
 
       return user;
     } catch (Err) {
-      console.log(Err);
       throw new HttpException('Registration failed', 500);
     }
   }
@@ -81,12 +81,37 @@ export class UserService {
 
     return updatedUser;
   }
+  async getFavoriteList(userId: string) {
+    const user = await this.findById(userId);
+    const favoriteList = user.favorite;
+    const promiseArr = favoriteList.map((item) =>
+      this.productService.findProductById(item),
+    );
+    return await Promise.allSettled(promiseArr);
+  }
   async findByIdObject(_id: string) {
     try {
       const user = await this.userModel.findOne({ _id });
       return user;
     } catch (err) {
       throw new HttpException('Failed to find user', 404);
+    }
+  }
+  async updateUserData(@Body() body: updateUserDto, userId: string) {
+    try {
+      const { userName, mail } = body;
+      const user = await this.findByIdObject(userId);
+      if (!user) {
+        throw new HttpException('User not found', 404);
+      }
+      user.userName = userName;
+      user.mail = mail;
+      const updUser = await user.save();
+      const userData = { ...updUser.toObject() };
+      delete userData.passwordHash;
+      return updUser;
+    } catch (err) {
+      throw new HttpException('Failed to update user data', 400);
     }
   }
 }

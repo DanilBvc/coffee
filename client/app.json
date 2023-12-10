@@ -1,32 +1,35 @@
 {
   "expo": {
+    "build": {
+      "output": "build"
+    },
     "scheme": "coffee",
     "name": "coffee",
     "slug": "coffee",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.coffee"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "googleServicesFile": "./google-services.json",
       "package": "com.anonymous.coffee"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+
+    "extra": {
+      "eas": {
+        "projectId": "475dc064-887e-4bde-81da-1d6c46a784ef"
+      }
     },
-    "plugins": ["@react-native-google-signin/google-signin"]
+    "owner": "sofiakyrylenko"
   }
 }

@@ -16,7 +16,6 @@ export class ProductController {
 
   @Post('create')
   async createProduct(@Body() body: createProductDto) {
-    console.log('create');
     return await this.productService.createProduct(body);
   }
   @Delete(':id')

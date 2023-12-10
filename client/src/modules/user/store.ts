@@ -5,7 +5,7 @@ interface userData {
   mail: string;
   avatar: string;
   orders: string[];
-  favorite: string[];
+  favorite: any[];
 }
 interface userStore extends userData {
   updateUserData: (userData: userData) => void;

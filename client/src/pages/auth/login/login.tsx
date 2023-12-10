@@ -51,6 +51,7 @@ function Login () {
       const userData = await unauthorizedRequest(loginUrl, 'POST', inputData);
       if (userData?.accessToken) {
         await AsyncStorage.setItem('accessToken', userData.accessToken);
+        await AsyncStorage.setItem('refreshToken', userData.refreshToken);
       }
       updateUserData(userData);
       if (rememberMe) {
